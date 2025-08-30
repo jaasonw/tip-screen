@@ -1,26 +1,38 @@
-# Use the official Node.js image as the base image
-FROM node:22-alpine
+# Use the official Node.js image
+FROM node:22-alpine AS builder
 
-# Set the working directory in the container
+# Set working directory
 WORKDIR /app
 
-# Copy package.json and pnpm-lock.yaml to the working directory
-COPY package.json pnpm-lock.yaml ./
+# Copy package files
+COPY package*.json ./
 
-# Install pnpm globally
-RUN npm install -g pnpm
+# Install dependencies
+RUN npm ci
 
-# Install project dependencies using pnpm
-RUN pnpm install
-
-# Copy the rest of the application code
+# Copy source code
 COPY . .
 
-# Build the SvelteKit application
+# Build the application
 RUN npm run build
 
-# Expose the port the app runs on
+# Production stage
+FROM node:22-alpine AS runner
+
+# Set working directory
+WORKDIR /app
+
+# Copy built application
+COPY --from=builder /app/build build/
+COPY --from=builder /app/node_modules node_modules/
+COPY --from=builder /app/package.json .
+
+# Expose port
 EXPOSE 3000
 
-# Command to run the application
-CMD ["node", "./build/index.js"]
+# Set environment variables
+ENV NODE_ENV=production
+ENV PORT=3000
+
+# Start the application
+CMD ["node", "build"]
