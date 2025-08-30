@@ -1,10 +1,10 @@
 # tip-screen
 
-it's a fake tip screen that i had gemini cook up so i can whip it out on people after i reset their password
+it's a fake tip screen that i had gemini and claude cook up so i can whip it out on people after i reset their password
 
 # deployment
 
-it's 1 html file, im sure it'll host on vercel or something
+it's a sveltekit im sure it'll host on vercel or something
 
 # license
 
