@@ -1,5 +1,8 @@
-# Use Node 22 for Svelte compatibility
+# Use the official pnpm image with Node 22
 FROM node:22-alpine AS builder
+
+# Enable corepack (includes pnpm)
+RUN corepack enable
 
 # Install build dependencies for native modules
 RUN apk add --no-cache \
@@ -11,35 +14,31 @@ RUN apk add --no-cache \
 # Set working directory
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
+# Copy pnpm files
+COPY package.json pnpm-lock.yaml ./
 
-# Install dependencies with legacy peer deps flag for better compatibility
-RUN npm install --legacy-peer-deps
+# Install dependencies with pnpm
+RUN pnpm install --frozen-lockfile
 
 # Copy source code
 COPY . .
 
 # Build the application
-RUN npm run build
+RUN pnpm run build
 
 # Production stage
 FROM node:22-alpine AS runner
 
+# Enable corepack for pnpm
+RUN corepack enable
+
 # Set working directory
 WORKDIR /app
 
-# Create a non-root user
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S svelte -u 1001
-
-# Copy built application with correct ownership
-COPY --from=builder --chown=svelte:nodejs /app/build build/
-COPY --from=builder --chown=svelte:nodejs /app/node_modules node_modules/
-COPY --from=builder --chown=svelte:nodejs /app/package.json .
-
-# Switch to non-root user
-USER svelte
+# Copy built application
+COPY --from=builder /app/build build/
+COPY --from=builder /app/node_modules node_modules/
+COPY --from=builder /app/package.json .
 
 # Expose port
 EXPOSE 3000
