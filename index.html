@@ -12,7 +12,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body :class="darkMode ? 'bg-gray-900' : 'bg-gray-50'" x-data="tipApp()">
-    <div class="flex min-h-screen items-center justify-center p-4">
+    <div
+      class="flex min-h-screen items-center justify-center p-4 pb-16 relative"
+    >
       <div class="w-full max-w-md text-center">
         <!-- Settings Button -->
         <button
@@ -22,7 +24,6 @@
         >
           Add a tip?
         </button>
-
         <!-- Settings Modal -->
         <div
           x-show="showSettings"
@@ -32,28 +33,27 @@
           x-transition:leave="transition ease-in duration-200"
           x-transition:leave-start="opacity-100"
           x-transition:leave-end="opacity-0"
-          class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+          class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 z-50"
           style="display: none"
         >
           <div
             :class="darkMode ? 'bg-gray-800 text-white' : 'bg-white'"
-            class="rounded-lg p-6 w-full max-w-md"
+            class="rounded-lg p-3 w-full max-w-xs max-h-[90vh] overflow-y-auto"
             @click.away="showSettings = false"
           >
             <!-- Dark Mode Toggle "Settings" Header -->
             <button
               @click="toggleDarkMode()"
-              class="text-xl font-bold mb-4 hover:opacity-75 transition-opacity"
+              class="text-lg font-bold mb-2 hover:opacity-75 transition-opacity"
               title="Click to toggle dark mode"
             >
               Settings
             </button>
-
             <!-- Venmo Handle Input -->
-            <div class="mb-4">
+            <div class="mb-3">
               <label
                 :class="darkMode ? 'text-gray-300' : 'text-gray-700'"
-                class="block text-left text-sm font-medium mb-2"
+                class="block text-left text-xs font-medium mb-1"
               >
                 Venmo Handle
               </label>
@@ -63,14 +63,14 @@
                 @keydown.enter="saveSettings()"
                 placeholder="@username or username"
                 :class="darkMode ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' : 'bg-white border-gray-300'"
-                class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                class="w-full px-2 py-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
               />
             </div>
             <!-- Bill Amount Input -->
-            <div class="mb-4">
+            <div class="mb-3">
               <label
                 :class="darkMode ? 'text-gray-300' : 'text-gray-700'"
-                class="block text-left text-sm font-medium mb-2"
+                class="block text-left text-xs font-medium mb-1"
               >
                 Bill Amount ($)
               </label>
@@ -82,20 +82,20 @@
                 step="0.01"
                 min="0"
                 :class="darkMode ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' : 'bg-white border-gray-300'"
-                class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                class="w-full px-2 py-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
               />
             </div>
             <!-- Tip Percentage Inputs -->
-            <div class="mb-6">
+            <div class="mb-3">
               <label
                 :class="darkMode ? 'text-gray-300' : 'text-gray-700'"
-                class="block text-left text-sm font-medium mb-2"
+                class="block text-left text-xs font-medium mb-1"
               >
                 Tip Percentages
               </label>
               <template x-for="(value, label) in tipPercentages" :key="label">
-                <div class="flex items-center justify-between mb-2">
-                  <span class="text-sm" x-text="label"></span>
+                <div class="flex items-center justify-between mb-1">
+                  <span class="text-xs" x-text="label"></span>
                   <div class="flex items-center">
                     <input
                       type="number"
@@ -103,34 +103,33 @@
                       @input="updateTipPercentage(label, $event.target.value)"
                       @keydown.enter="saveSettings()"
                       :class="darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'"
-                      class="w-16 px-2 py-1 border rounded text-center text-sm"
+                      class="w-12 px-1 py-1 border rounded text-center text-xs"
                       min="0"
                       max="100"
                     />
-                    <span class="ml-1 text-sm">%</span>
+                    <span class="ml-1 text-xs">%</span>
                   </div>
                 </div>
               </template>
             </div>
             <!-- Buttons -->
-            <div class="flex gap-3">
+            <div class="flex gap-2">
               <button
                 @click="showSettings = false"
                 :class="darkMode ? 'border-gray-600 text-gray-300 hover:bg-gray-700' : 'border-gray-300 text-gray-700 hover:bg-gray-50'"
-                class="flex-1 px-4 py-2 border rounded-md"
+                class="flex-1 px-3 py-1 border rounded-md text-sm"
               >
                 Cancel
               </button>
               <button
                 @click="saveSettings()"
-                class="flex-1 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                class="flex-1 px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 text-sm"
               >
                 Save
               </button>
             </div>
           </div>
         </div>
-
         <!-- QR Code Modal -->
         <div
           x-show="showQR"
@@ -140,50 +139,43 @@
           x-transition:leave="transition ease-in duration-200"
           x-transition:leave-start="opacity-100"
           x-transition:leave-end="opacity-0"
-          class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+          class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 z-50"
           style="display: none"
         >
           <div
             :class="darkMode ? 'bg-gray-800 text-white' : 'bg-white'"
-            class="rounded-lg p-6 w-full max-w-sm text-center"
+            class="rounded-lg p-3 w-full max-w-xs text-center max-h-[90vh] overflow-y-auto"
             @click.away="closeQR()"
           >
-            <h2 class="text-xl font-bold mb-4">Scan to Pay</h2>
+            <h2 class="text-lg font-bold mb-2">Scan to Pay</h2>
             <template x-if="venmoHandle.trim()">
-              <div class="mb-4">
+              <div class="mb-2">
                 <!-- QR Code Container -->
-                <div id="qrcode" class="flex justify-center mb-4"></div>
-                <p
-                  :class="darkMode ? 'text-gray-300' : 'text-gray-600'"
-                  class="text-sm mb-2"
-                >
-                  Bill: $<span x-text="billAmount.toFixed(2)"></span>
-                </p>
-                <p
-                  :class="darkMode ? 'text-gray-300' : 'text-gray-600'"
-                  class="text-sm mb-2"
-                >
-                  Tip: $<span x-text="tipAmount.toFixed(2)"></span> (<span
-                    x-text="Math.round(selectedTip * 100)"
-                  ></span
-                  >%)
-                </p>
-                <p class="text-lg font-semibold text-green-600">
-                  Total: $<span
-                    x-text="(billAmount + tipAmount).toFixed(2)"
-                  ></span>
-                </p>
-                <p
-                  :class="darkMode ? 'text-gray-400' : 'text-gray-500'"
-                  class="text-xs mt-2"
-                >
-                  to
-                  <span
-                    x-text="venmoHandle.startsWith('@') ? venmoHandle : `@${venmoHandle}`"
-                  ></span>
-                </p>
+                <div id="qrcode" class="flex justify-center mb-2"></div>
+                <div class="space-y-1 text-xs">
+                  <p :class="darkMode ? 'text-gray-300' : 'text-gray-600'">
+                    Bill: $<span x-text="billAmount.toFixed(2)"></span>
+                  </p>
+                  <p :class="darkMode ? 'text-gray-300' : 'text-gray-600'">
+                    Tip: $<span x-text="tipAmount.toFixed(2)"></span> (<span
+                      x-text="Math.round(selectedTip * 100)"
+                    ></span
+                    >%)
+                  </p>
+                  <p class="text-sm font-semibold text-green-600">
+                    Total: $<span
+                      x-text="(billAmount + tipAmount).toFixed(2)"
+                    ></span>
+                  </p>
+                  <p :class="darkMode ? 'text-gray-400' : 'text-gray-500'">
+                    to
+                    <span
+                      x-text="venmoHandle.startsWith('@') ? venmoHandle : `@${venmoHandle}`"
+                    ></span>
+                  </p>
+                </div>
                 <!-- Direct Link for testing -->
-                <div class="mt-4">
+                <div class="mt-2">
                   <a
                     :href="venmoURL"
                     target="_blank"
@@ -195,11 +187,11 @@
               </div>
             </template>
             <template x-if="!venmoHandle.trim()">
-              <div class="mb-4">
-                <p class="text-red-500 mb-2">No Venmo handle set!</p>
+              <div class="mb-2">
+                <p class="text-red-500 mb-1 text-sm">No Venmo handle set!</p>
                 <p
                   :class="darkMode ? 'text-gray-300' : 'text-gray-600'"
-                  class="text-sm"
+                  class="text-xs"
                 >
                   Please configure your Venmo handle in settings first.
                 </p>
@@ -208,13 +200,12 @@
             <button
               @click="closeQR()"
               :class="darkMode ? 'bg-gray-600 hover:bg-gray-700' : 'bg-gray-500 hover:bg-gray-600'"
-              class="w-full px-4 py-2 text-white rounded-md"
+              class="w-full px-3 py-2 text-white rounded-md text-sm"
             >
               Close
             </button>
           </div>
         </div>
-
         <!-- Tip Buttons -->
         <div class="mb-4 grid grid-cols-3 gap-4">
           <template x-for="(value, label) in tipPercentages" :key="label">
@@ -238,6 +229,35 @@
           No tip
         </button>
       </div>
+
+      <!-- Footer -->
+      <footer
+        class="absolute bottom-2 left-2 right-2 grid grid-cols-3 w-auto text-xs"
+        :class="darkMode ? 'text-gray-400' : 'text-gray-500'"
+      >
+        <span></span>
+        <span class="flex flex-col items-center justify-center">
+          <span>copyright 2025</span>
+          <span class="text-center"
+            >open source under
+            <a
+              class="underline hover:opacity-75"
+              href="https://github.com/jaasonw/tip-screen/blob/static/LICENSE"
+              >WTFPL license</a
+            ></span
+          >
+        </span>
+        <span class="flex flex-col items-end">
+          <a
+            href="https://github.com/jaasonw/tip-screen"
+            class="text-right hover:underline"
+            >view source</a
+          >
+          <a href="https://ko-fi.com/wayson" class="text-right hover:underline"
+            >buy me a coffee</a
+          >
+        </span>
+      </footer>
     </div>
 
     <script>
@@ -251,35 +271,28 @@
           tipPercentages: { "15%": 0.15, "20%": 0.2, "25%": 0.25 },
           qrCodeInstance: null,
           darkMode: false,
-
           get tipAmount() {
             return this.selectedTip ? this.billAmount * this.selectedTip : 0;
           },
-
           get venmoURL() {
             return this.generateVenmoURL(this.tipAmount);
           },
-
           toggleDarkMode() {
             this.darkMode = !this.darkMode;
             console.log("Dark mode:", this.darkMode ? "enabled" : "disabled");
           },
-
           generateQRCode(venmoURL) {
-            // Clear existing QR code
             const qrContainer = document.getElementById("qrcode");
             qrContainer.innerHTML = "";
-            // Create new QR code
             this.qrCodeInstance = new QRCode(qrContainer, {
               text: venmoURL,
-              width: 200,
-              height: 200,
+              width: 120,
+              height: 120,
               colorDark: "#000000",
               colorLight: "#ffffff",
               correctLevel: QRCode.CorrectLevel.H,
             });
           },
-
           generateVenmoURL(tipAmount) {
             if (!this.venmoHandle) return "";
             const total = this.billAmount + tipAmount;
@@ -288,9 +301,7 @@
               : `@${this.venmoHandle}`;
             return `https://venmo.com/?txn=charge&audience=friends&recipients=${encodeURIComponent(handleWithAt)}&amount=${total.toFixed(2)}`;
           },
-
           handleTipSelect(tipPercent) {
-            // Do nothing if no Venmo handle is set - no popup
             if (!this.venmoHandle.trim()) {
               console.log("No Venmo handle set - popup prevented");
               return;
@@ -299,15 +310,12 @@
             const tipAmount = tipPercent ? this.billAmount * tipPercent : 0;
             const venmoURL = this.generateVenmoURL(tipAmount);
             this.showQR = true;
-            // Use setTimeout instead of $nextTick for better compatibility
             setTimeout(() => {
               this.generateQRCode(venmoURL);
             }, 100);
             console.log("Selected tip:", tipPercent);
           },
-
           handleCustomTip() {
-            // Do nothing if no Venmo handle is set - no popup
             if (!this.venmoHandle.trim()) {
               console.log("No Venmo handle set - popup prevented");
               return;
@@ -321,7 +329,6 @@
             }
             console.log("Custom tip selected");
           },
-
           saveSettings() {
             this.showSettings = false;
             console.log("Settings saved:", {
@@ -329,15 +336,12 @@
               tipPercentages: this.tipPercentages,
             });
           },
-
           updateTipPercentage(label, value) {
             this.tipPercentages[label] = (value || 0) / 100;
           },
-
           closeQR() {
             this.showQR = false;
             this.selectedTip = null;
-            // Clear QR code
             const qrContainer = document.getElementById("qrcode");
             if (qrContainer) {
               qrContainer.innerHTML = "";
