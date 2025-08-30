@@ -3,6 +3,6 @@ services:
   sveltekit_app:
     build: .
     ports:
-      - "3000:3000"
+      - "3000:3003"
     environment:
       NODE_ENV: production
