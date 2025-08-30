@@ -36,6 +36,12 @@
 	}
 
 	async function handleTipSelect(tipPercent) {
+		// Do nothing if no Venmo handle is set - no popup
+		if (!venmoHandle.trim()) {
+			console.log('No Venmo handle set - popup prevented');
+			return;
+		}
+
 		selectedTip = tipPercent;
 		const tipAmount = tipPercent ? billAmount * tipPercent : 0;
 		const venmoURL = generateVenmoURL(tipAmount);
@@ -45,6 +51,12 @@
 	}
 
 	async function handleCustomTip() {
+		// Do nothing if no Venmo handle is set - no popup
+		if (!venmoHandle.trim()) {
+			console.log('No Venmo handle set - popup prevented');
+			return;
+		}
+
 		// You could add a prompt or input for custom amount
 		const customPercent = prompt('Enter custom tip percentage (e.g., 18 for 18%):');
 		if (customPercent && !isNaN(customPercent)) {
@@ -67,6 +79,12 @@
 		showQR = false;
 		selectedTip = null;
 		qrCodeDataURL = '';
+	}
+
+	function handleKeydown(event) {
+		if (event.key === 'Enter') {
+			saveSettings();
+		}
 	}
 
 	$: tipAmount = selectedTip ? billAmount * selectedTip : 0;
@@ -99,6 +117,7 @@
 							bind:value={venmoHandle}
 							placeholder="@username or username"
 							class="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+							on:keydown={handleKeydown}
 						/>
 					</div>
 
@@ -114,6 +133,7 @@
 							step="0.01"
 							min="0"
 							class="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+							on:keydown={handleKeydown}
 						/>
 					</div>
 
@@ -130,6 +150,7 @@
 										type="number"
 										value={Math.round(value * 100)}
 										on:input={(e) => updateTipPercentage(label, parseFloat(e.target.value) || 0)}
+										on:keydown={handleKeydown}
 										class="w-16 rounded border border-gray-300 px-2 py-1 text-center text-sm"
 										min="0"
 										max="100"
@@ -251,4 +272,3 @@
 		</button>
 	</div>
 </div>
-
